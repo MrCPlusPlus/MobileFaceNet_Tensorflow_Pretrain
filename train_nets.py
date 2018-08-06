@@ -54,7 +54,7 @@ def get_parser():
     parser.add_argument('--ckpt_interval', default=2000, help='intervals to save ckpt file')
     parser.add_argument('--validate_interval', default=2000, help='intervals to save ckpt file')
     parser.add_argument('--show_info_interval', default=20, help='intervals to save ckpt file')
-    parser.add_argument('--pretrained_model', type=str, default='', help='Load a pretrained model before training starts.')
+    parser.add_argument('--pretrained_model', type=str, default='./output/ckpt', help='Load a pretrained model before training starts.')
     parser.add_argument('--optimizer', type=str, choices=['ADAGRAD', 'ADADELTA', 'ADAM', 'RMSPROP', 'MOM'],
                         help='The optimization algorithm to use', default='ADAM')
     parser.add_argument('--log_device_mapping', default=False, help='show device placement log')
@@ -110,7 +110,7 @@ if __name__ == '__main__':
             ver_name_list.append(db)
 
         # pretrained model path
-        pretrained_model = args.ckpt_path
+        pretrained_model = None
         if args.pretrained_model:
             pretrained_model = os.path.expanduser(args.pretrained_model)
             print('Pre-trained model: %s' % pretrained_model)
@@ -192,8 +192,8 @@ if __name__ == '__main__':
         if pretrained_model:
             print('Restoring pretrained model: %s' % pretrained_model)
             ckpt = tf.train.get_checkpoint_state(pretrained_model)
-            print(ckpt)
             saver.restore(sess, ckpt.model_checkpoint_path)
+            print('Successfully restored!')
 
         # output file path
         if not os.path.exists(args.log_file_path):
